@@ -17,8 +17,8 @@
     },
     "autoload": {
         "psr-0": {
-            "Camdram\\SphinxRealTimeBundle": ""
+            "Acts\\SphinxRealTimeBundle": ""
         }
     },
-    "target-dir" : "/Camdram/SphinxRealTimeBundle"
+    "target-dir" : "/Acts/SphinxRealTimeBundle"
 }
