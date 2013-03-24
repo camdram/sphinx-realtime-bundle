@@ -17,8 +17,8 @@
     },
     "autoload": {
         "psr-0": {
-            "Hoyes\\ImageManagerBundle": ""
+            "Camdram\\SphinxRealTimeBundle": ""
         }
     },
-    "target-dir" : "/Hoyes/ImageManagerBundle"
+    "target-dir" : "/Camdram/SphinxRealTimeBundle"
 }
