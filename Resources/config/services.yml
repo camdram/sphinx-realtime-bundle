@@ -1,0 +1,63 @@
+parameters:
+    acts.sphinx_realtime.client.class: Acts\SphinxRealTimeBundle\Service\Client
+    acts.sphinx_realtime.client_manager.class: Acts\SphinxRealTimeBundle\Manager\ClientManager
+    acts.sphinx_realtime.index.class: Acts\SphinxRealTimeBundle\Service\Index
+    acts.sphinx_realtime.index_manager.class: Acts\SphinxRealTimeBundle\Manager\IndexManager
+    acts.sphinx_realtime.config_builder.class: Acts\SphinxRealTimeBundle\Service\ConfigBuilder
+    acts.sphinx_realtime.provider_registry.class: Acts\SphinxRealTimeBundle\Provider\ProviderRegistry
+    acts.sphinx_realtime.sphinx_to_model_transformer.collection.class: Acts\SphinxRealTimeBundle\Transformer\SphinxToModelTransformerCollection
+
+services:
+    acts.sphinx_realtime.client.abstract:
+        class: %acts.sphinx_realtime.client.class%
+        abstract: true
+
+    acts.sphinx_realtime.client_manager:
+        class: %acts.sphinx_realtime.client_manager.class%
+
+    acts.sphinx_realtime.index.abstract:
+        class: %acts.sphinx_realtime.index.class%
+        abstract: true
+
+    acts.sphinx_realtime.index_manager:
+        class: %acts.sphinx_realtime.index_manager.class%
+
+    acts.sphinx_realtime.provider_registry:
+        class: %acts.sphinx_realtime.provider_registry.class%
+        calls:
+            - [setContainer, [@service_container]]
+
+    acts.sphinx_realtime.config_builder:
+        class: %acts.sphinx_realtime.config_builder.class%
+        arguments:
+            - @acts.sphinx_realtime.client_manager
+            - @acts.sphinx_realtime.index_manager
+
+    acts.sphinx_realtime.finder.abstract:
+        class: Acts\SphinxRealTimeBundle\Finder\TransformedFinder
+        abstract: true
+        arguments:
+            - ~ #searchable
+            - ~ #transformer
+
+    acts.sphinx_realtime.object_persister.abstract:
+        class: Acts\SphinxRealTimeBundle\Persister\ObjectPersister
+        abstract: true
+        arguments:
+            - ~ #type
+            - ~ #model to sphinx transformer
+            - ~ #model
+            - ~ #properties mapping
+
+    acts.sphinx_realtime.model_to_sphinx_transformer.abstract.auto:
+        class: Acts\SphinxRealTimeBundle\Transformer\ModelToSphinxAutoTransformer
+        public: false
+        abstract: true
+        arguments:
+            - [] #options
+
+    acts.sphinx_realtime.sphinx_to_model_transformer.collection.abstract:
+        class: %acts.sphinx_realtime.sphinx_to_model_transformer.collection.class%
+        abstract: true
+        arguments:
+            - [] #transformers

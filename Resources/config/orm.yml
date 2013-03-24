@@ -1,0 +1,32 @@
+services:
+    acts.sphinx_realtime.provider.abstract.orm:
+        class: Acts\SphinxRealTimeBundle\Doctrine\ORM\Provider
+        abstract: true
+        arguments:
+            - ~ #object persister
+            - ~ #model
+            - []
+            - @doctrine
+
+    acts.sphinx_realtime.listener.abstract.orm:
+        class: Acts\SphinxRealTimeBundle\Doctrine\ORM\Listener
+        public: false
+        abstract: true
+        arguments:
+            - ~ #object persister
+            - ~ #model
+            - [] #events
+            - ~ #identifier
+            - ~ #check method
+
+    acts.sphinx_realtime.sphinx_to_model_transformer.abstract.orm:
+        class: Acts\SphinxRealTimeBundle\Doctrine\ORM\SphinxToModelTransformer
+        public: false
+        arguments:
+            - @doctrine
+            - ~ #model
+            - [] #options
+
+    acts.sphinx_realtime.manager.orm:
+        class: Acts\SphinxRealTimeBundle\Doctrine\RepositoryManager
+        arguments: [@doctrine, @annotation_reader]
