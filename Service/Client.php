@@ -70,6 +70,9 @@ class Client
     public function insert($index, array $document)
     {
         $sq = SphinxQL::forge($this->getConnection())->insert()->into('`'.$index.'`');
+        foreach ($document as &$value) {
+            if (is_null($value)) $value = '';
+        }
         $sq->columns(array_keys($document))->values($document);
         return $sq->execute();
     }
@@ -79,7 +82,7 @@ class Client
         $sq = SphinxQL::forge($this->getConnection())->insert()->into('`'.$index.'`');
         $sq->columns($keys);
         foreach ($documents as $document) {
-            foreach ($document as $key => &$value) {
+            foreach ($document as &$value) {
                 if (is_null($value)) $value = '';
             }
             $sq->values($document);
@@ -90,7 +93,7 @@ class Client
     public function deleteById($index, $id)
     {
         return SphinxQL::forge($this->getConnection())->delete()
-            ->from($index)
+            ->from('`'.$index.'`')
             ->where('id', $id)
             ->execute();
     }

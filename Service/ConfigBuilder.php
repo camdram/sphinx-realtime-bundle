@@ -29,7 +29,7 @@ class ConfigBuilder
         foreach ($index->getAttributes() as $name => $type) {
             switch ($type) {
                 case 'float': $sphinx_type = 'float'; break;
-                case 'int': $spinx_type = 'uint'; break;
+                case 'int': $sphinx_type = 'uint'; break;
                 case 'datetime': $sphinx_type = 'timestamp'; break;
                 default: $sphinx_type = 'string'; break;
             }

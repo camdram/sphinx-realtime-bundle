@@ -81,11 +81,11 @@ abstract class AbstractSphinxToModelTransformer implements SphinxToModelTransfor
         $identifier_key = $this->options['identifier'];
 
         // sort objects in the order of ids
-        /*$idPos = array_flip($ids);
+        $idPos = array_flip($ids);
         usort($objects, function($a, $b) use ($idPos, $accessor, $identifier_key)
         {
             return $idPos[$accessor->getValue($a, $identifier_key)] > $idPos[$accessor->getValue($b, $identifier_key)];
-        })*/;
+        });
 
         return $objects;
     }
