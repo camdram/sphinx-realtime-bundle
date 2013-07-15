@@ -24,6 +24,7 @@ class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->root('acts_sphinx_real_time');
         $rootNode->isRequired()
             ->children()
+            ->scalarNode('enabled')->defaultTrue()->end()
             ->arrayNode('clients')
             ->prototype('array')
             ->addDefaultsIfNotSet()
