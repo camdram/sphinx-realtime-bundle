@@ -56,7 +56,7 @@ class ActsSphinxRealTimeExtension extends Extension
         $def->addArgument($id)
             ->addArgument($config);
         $container->setDefinition('acts.sphinx_realtime.client.'.$id, $def);
-        return new Reference('acts.sphinx_realtime.client.'.$id, $def);
+        return new Reference('acts.sphinx_realtime.client.'.$id);
     }
 
     private function createIndex($id, $config, ContainerBuilder $container)
@@ -85,7 +85,7 @@ class ActsSphinxRealTimeExtension extends Extension
             $this->loadIndexPersistenceIntegration($config['persistence'], $container, $def, $id);
         }
 
-        return new Reference('acts.sphinx_realtime.index.'.$id, $def);
+        return new Reference('acts.sphinx_realtime.index.'.$id);
     }
 
     protected function loadIndexPersistenceIntegration(array $indexConfig, ContainerBuilder $container, Definition $typeDef, $indexId)
