@@ -27,7 +27,7 @@ class Index
         $this->attributes = $attributes;
         $this->config = $config;
 
-        $this->keys = array_merge(array('id'), $this->fields, array_keys($this->attributes));
+        $this->keys = array_unique(array_merge(array('id'), $this->fields, array_keys($this->attributes)));
     }
 
     /**

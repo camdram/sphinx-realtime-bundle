@@ -1,5 +1,5 @@
 {
-    "name": "camdram/sphinx-realtime-bundle",
+    "name": "acts/sphinx-realtime-bundle",
     "description": "A bundle for Symfony2 which automatically syncs Doctrine entities to a Sphinx real-time index.",
     "keywords": ["sphinx", "search", "index", "autocomplete"],
     "type": "symfony-bundle",
@@ -13,7 +13,7 @@
     "require": {
         "php":             ">=5.3.0",
         "symfony/symfony": ">=2.1",
-	"foolz/sphinxql-query-builder": "0.9.*"
+	    "foolz/sphinxql-query-builder": "0.9.*"
     },
     "autoload": {
         "psr-0": {
