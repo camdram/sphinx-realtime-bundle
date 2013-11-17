@@ -6,6 +6,7 @@ parameters:
     acts.sphinx_realtime.config_builder.class: Acts\SphinxRealTimeBundle\Service\ConfigBuilder
     acts.sphinx_realtime.provider_registry.class: Acts\SphinxRealTimeBundle\Provider\ProviderRegistry
     acts.sphinx_realtime.sphinx_to_model_transformer.collection.class: Acts\SphinxRealTimeBundle\Transformer\SphinxToModelTransformerCollection
+    acts.sphinx_realtime.resetter.class: Acts\SphinxRealTimeBundle\Resetter
 
 services:
     acts.sphinx_realtime.client.abstract:
@@ -61,3 +62,7 @@ services:
         abstract: true
         arguments:
             - [] #transformers
+
+    acts.sphinx_realtime.resetter:
+        class: %acts.sphinx_realtime.resetter.class%
+        arguments: [@acts.sphinx_realtime.index_manager]

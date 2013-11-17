@@ -29,8 +29,6 @@ class Configuration implements ConfigurationInterface
             ->prototype('array')
             ->addDefaultsIfNotSet()
             ->children()
-                ->scalarNode('host')->defaultValue('localhost')->end()
-                ->scalarNode('port')->defaultValue(9312)->end()
                 ->scalarNode('log')->defaultValue('/var/log/searchd/searchd.log')->end()
 	            ->scalarNode('query_log')->defaultValue('/var/log/searchd/query.log')->end()
 	            ->scalarNode('pid_file')->defaultValue('/var/log/searchd/searchd.pid')->end()

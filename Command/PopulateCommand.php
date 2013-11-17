@@ -27,6 +27,11 @@ class PopulateCommand extends ContainerAwareCommand
     private $providerRegistry;
 
     /**
+     * @var \Acts\SphinxRealTimeBundle\Resetter
+     */
+    private $resetter;
+
+    /**
      * @see Symfony\Component\Console\Command\Command::configure()
      */
     protected function configure()
@@ -47,7 +52,7 @@ class PopulateCommand extends ContainerAwareCommand
         $this->indexManager = $this->getContainer()->get('acts.sphinx_realtime.index_manager');
         $this->clientManager = $this->getContainer()->get('acts.sphinx_realtime.client_manager');
         $this->providerRegistry = $this->getContainer()->get('acts.sphinx_realtime.provider_registry');
-        //$this->resetter = $this->getContainer()->get('foq_elastica.resetter');
+        $this->resetter = $this->getContainer()->get('acts.sphinx_realtime.resetter');
     }
 
     /**
@@ -75,8 +80,8 @@ class PopulateCommand extends ContainerAwareCommand
         $index = $this->indexManager->getById($index);
 
         if ($reset) {
-            //TODO - truncate command is not implemented until Sphinx 2.1
-            //$output->writeln(sprintf('<info>Resetting</info> <comment>%s</comment>', $index));
+            $output->writeln(sprintf('<info>Resetting</info> <comment>%s</comment>', $index->getId()));
+            $this->resetter->resetIndex($index->getId());
         }
 
         $provider = $this->providerRegistry->getIndexProvider($index->getId());

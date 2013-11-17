@@ -98,4 +98,9 @@ class Client
             ->execute();
     }
 
+    public function truncate($index)
+    {
+        return $this->getConnection()->query('TRUNCATE RTINDEX `'.$index.'`');
+    }
+
 }

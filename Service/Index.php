@@ -83,6 +83,11 @@ class Index
         return $this->getClient()->insert($this->getId(), $document);
     }
 
+    public function truncate()
+    {
+        return $this->getClient()->truncate($this->getId());
+    }
+
     public function search(SphinxQL $query)
     {
         $query->from($this->getId());
