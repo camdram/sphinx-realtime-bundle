@@ -63,7 +63,7 @@ class ModelToSphinxAutoTransformer implements ModelToSphinxTransformerInterface
         $normalizeValue = function(&$v)
         {
             if ($v instanceof \DateTime) {
-                $v = $v->format('U');
+                $v = $v->format('c');
             } elseif (!is_scalar($v) && !is_null($v)) {
                 $v = (string)$v;
             }
