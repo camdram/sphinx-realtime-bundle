@@ -28,8 +28,6 @@ class ActsSphinxRealTimeExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        if ($config['enabled'] === false) return;
-
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
 
@@ -42,7 +40,7 @@ class ActsSphinxRealTimeExtension extends Extension
 
         $indexes = array();
         foreach ($config['indexes'] as $id => $index) {
-            $indexes[$id] = $this->createIndex($id, $index, $container);
+            $indexes[$id] = $this->createIndex($id, $index, $container, $config['enabled']);
         }
         $container->getDefinition('acts.sphinx_realtime.index_manager')
             ->addArgument($indexes);
@@ -59,7 +57,7 @@ class ActsSphinxRealTimeExtension extends Extension
         return new Reference('acts.sphinx_realtime.client.'.$id);
     }
 
-    private function createIndex($id, $config, ContainerBuilder $container)
+    private function createIndex($id, $config, ContainerBuilder $container, $enabled)
     {
         if (!isset($config['config']['path'])) {
             $config['config']['path'] = $container->getParameter('kernel.root_dir').'/data/sphinx/'.$id;
@@ -81,7 +79,7 @@ class ActsSphinxRealTimeExtension extends Extension
         $container->setDefinition('acts.sphinx_realtime.index.'.$id, $def);
 
         $this->indexFields[$id] = array_merge($config['fields'], array_keys($config['attributes']));
-        if (isset($config['persistence'])) {
+        if ($enabled && isset($config['persistence'])) {
             $this->loadIndexPersistenceIntegration($config['persistence'], $container, $def, $id);
         }
 
