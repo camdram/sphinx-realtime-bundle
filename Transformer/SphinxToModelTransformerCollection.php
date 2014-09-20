@@ -13,9 +13,14 @@ class SphinxToModelTransformerCollection implements SphinxToModelTransformerInte
 {
     protected $transformers = array();
 
-    public function __construct(array $transformers)
+    private $offset;
+
+    private $num_indexes;
+
+    public function __construct(array $transformers, $offset)
     {
         $this->transformers = $transformers;
+        $this->offset = $offset;
     }
 
     public function getObjectClass()
@@ -43,7 +48,7 @@ class SphinxToModelTransformerCollection implements SphinxToModelTransformerInte
         }
 
         $transformed = array();
-        foreach ($sorted AS $type => $objects) {
+        foreach ($sorted as $type => $objects) {
             $transformedObjects = $this->transformers[$type]->transform($objects);
             $identifierGetter = 'get' . ucfirst($this->transformers[$type]->getIdentifierField());
             $transformed[$type] = array_combine(

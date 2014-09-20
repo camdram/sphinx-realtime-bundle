@@ -39,8 +39,11 @@ class ActsSphinxRealTimeExtension extends Extension
             ->addArgument($clients);
 
         $indexes = array();
+        $numIndexes = count($config['indexes']);
+        $offset = 0;
         foreach ($config['indexes'] as $id => $index) {
-            $indexes[$id] = $this->createIndex($id, $index, $container, $config['enabled']);
+            $indexes[$id] = $this->createIndex($id, $index, $container, $config['enabled'], $offset, $numIndexes);
+            $offset++;
         }
         $container->getDefinition('acts.sphinx_realtime.index_manager')
             ->addArgument($indexes);
@@ -57,7 +60,7 @@ class ActsSphinxRealTimeExtension extends Extension
         return new Reference('acts.sphinx_realtime.client.'.$id);
     }
 
-    private function createIndex($id, $config, ContainerBuilder $container, $enabled)
+    private function createIndex($id, $config, ContainerBuilder $container, $enabled, $offset, $numIndexes)
     {
         if (!isset($config['config']['path'])) {
             $config['config']['path'] = $container->getParameter('kernel.root_dir').'/data/sphinx/'.$id;
@@ -80,18 +83,18 @@ class ActsSphinxRealTimeExtension extends Extension
 
         $this->indexFields[$id] = array_merge($config['fields'], array_keys($config['attributes']));
         if ($enabled && isset($config['persistence'])) {
-            $this->loadIndexPersistenceIntegration($config['persistence'], $container, $def, $id);
+            $this->loadIndexPersistenceIntegration($config['persistence'], $container, $def, $id, $offset, $numIndexes);
         }
 
         return new Reference('acts.sphinx_realtime.index.'.$id);
     }
 
-    protected function loadIndexPersistenceIntegration(array $indexConfig, ContainerBuilder $container, Definition $typeDef, $indexId)
+    protected function loadIndexPersistenceIntegration(array $indexConfig, ContainerBuilder $container, Definition $typeDef, $indexId, $offset, $numIndexes)
     {
         $this->loadDriver($container, $indexConfig['driver']);
 
-        $sphinxToModelTransformerId = $this->loadSphinxToModelTransformer($indexConfig, $container, $indexId);
-        $modelToSphinxTransformerId = $this->loadModelToSphinxTransformer($indexConfig, $container, $indexId);
+        $sphinxToModelTransformerId = $this->loadSphinxToModelTransformer($indexConfig, $container, $indexId, $numIndexes);
+        $modelToSphinxTransformerId = $this->loadModelToSphinxTransformer($indexConfig, $container, $indexId, $offset, $numIndexes);
         $objectPersisterId            = $this->loadObjectPersister($indexConfig, $typeDef, $container, $indexId, $modelToSphinxTransformerId);
 
         if (isset($indexConfig['provider'])) {
@@ -105,7 +108,7 @@ class ActsSphinxRealTimeExtension extends Extension
         }
     }
 
-    protected function loadSphinxToModelTransformer(array $indexConfig, ContainerBuilder $container, $indexId)
+    protected function loadSphinxToModelTransformer(array $indexConfig, ContainerBuilder $container, $indexId, $numIndexes)
     {
         if (isset($indexConfig['sphinx_to_model_transformer']['service'])) {
             return $indexConfig['sphinx_to_model_transformer']['service'];
@@ -119,7 +122,8 @@ class ActsSphinxRealTimeExtension extends Extension
         $argPos = ('propel' === $indexConfig['driver']) ? 0 : 1;
 
         $serviceDef->replaceArgument($argPos, $indexConfig['model']);
-        $serviceDef->replaceArgument($argPos + 1, array(
+        $serviceDef->replaceArgument($argPos + 1, $numIndexes);
+        $serviceDef->replaceArgument($argPos + 2, array(
             'identifier'    => $indexConfig['identifier'],
             'hydrate'       => $indexConfig['sphinx_to_model_transformer']['hydrate']
         ));
@@ -128,7 +132,7 @@ class ActsSphinxRealTimeExtension extends Extension
         return $serviceId;
     }
 
-    protected function loadModelToSphinxTransformer(array $indexConfig, ContainerBuilder $container, $indexId)
+    protected function loadModelToSphinxTransformer(array $indexConfig, ContainerBuilder $container, $indexId, $offset, $numIndexes)
     {
         if (isset($indexConfig['model_to_sphinx_transformer']['service'])) {
             return $indexConfig['model_to_sphinx_transformer']['service'];
@@ -139,6 +143,8 @@ class ActsSphinxRealTimeExtension extends Extension
         $serviceDef->replaceArgument(0, array(
             'identifier' => $indexConfig['identifier']
         ));
+        $serviceDef->addArgument($offset);
+        $serviceDef->addArgument($numIndexes);
         $container->setDefinition($serviceId, $serviceDef);
 
         return $serviceId;
