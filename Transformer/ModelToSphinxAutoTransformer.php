@@ -19,14 +19,21 @@ class ModelToSphinxAutoTransformer implements ModelToSphinxTransformerInterface
         'identifier' => 'id'
     );
 
+
+    private $offset;
+
+    private $num_indexes;
+
     /**
      * Instanciates a new Mapper
      *
      * @param array $options
      */
-    public function __construct(array $options = array())
+    public function __construct(array $options = array(), $offset, $num_indexes)
     {
         $this->options = array_merge($this->options, $options);
+        $this->offset = $offset;
+        $this->num_indexes = $num_indexes;
     }
 
     /**
@@ -39,8 +46,9 @@ class ModelToSphinxAutoTransformer implements ModelToSphinxTransformerInterface
      **/
     public function transform($object, array $fields)
     {
-        $accessor = PropertyAccess::getPropertyAccessor();
+        $accessor = PropertyAccess::createPropertyAccessor();
         $identifier = $accessor->getValue($object, $this->options['identifier']);
+        $identifier = ($identifier * $this->num_indexes) + $this->offset;
         $document           = array('id' => $identifier);
 
         foreach ($fields as $key) {

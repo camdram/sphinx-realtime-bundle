@@ -8,6 +8,8 @@ class Index
 {
     private $id;
 
+    private $offset;
+
     /** @var \Acts\SphinxRealTimeBundle\Service\Client */
     private $client;
 

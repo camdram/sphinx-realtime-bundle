@@ -25,6 +25,7 @@ services:
         arguments:
             - @doctrine
             - ~ #model
+            - ~ #num_indexes
             - [] #options
 
     acts.sphinx_realtime.manager.orm:

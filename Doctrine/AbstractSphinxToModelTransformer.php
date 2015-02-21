@@ -34,6 +34,8 @@ abstract class AbstractSphinxToModelTransformer implements SphinxToModelTransfor
 		'identifier' => 'id'
     );
 
+    protected $num_indexes;
+
     /**
      * Instantiates a new Mapper
      *
@@ -41,7 +43,7 @@ abstract class AbstractSphinxToModelTransformer implements SphinxToModelTransfor
      * @param string $objectClass
      * @param array $options
      */
-    public function __construct($registry, $objectClass, array $options = array())
+    public function __construct($registry, $objectClass, $num_indexes, array $options = array())
     {
         $this->registry    = $registry;
         $this->objectClass = $objectClass;
@@ -69,7 +71,7 @@ abstract class AbstractSphinxToModelTransformer implements SphinxToModelTransfor
     {
         $ids = array();
         foreach ($sphinxObjects as $sphinxObject) {
-            $ids[] = $sphinxObject['id'];
+            $ids[] = floor($sphinxObject['id'] / $this->num_indexes);
         }
 
         $objects = $this->findByIdentifiers($ids, $this->options['hydrate']);
@@ -77,7 +79,7 @@ abstract class AbstractSphinxToModelTransformer implements SphinxToModelTransfor
             throw new \RuntimeException('Cannot find corresponding Doctrine objects for all Sphinx results.');
         };
 
-        $accessor = PropertyAccess::getPropertyAccessor();
+        $accessor = PropertyAccess::createPropertyAccessor();
         $identifier_key = $this->options['identifier'];
 
         // sort objects in the order of ids
