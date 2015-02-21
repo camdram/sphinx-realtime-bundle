@@ -33,7 +33,6 @@ class Configuration implements ConfigurationInterface
 	            ->scalarNode('query_log')->defaultValue('/var/log/searchd/query.log')->end()
 	            ->scalarNode('pid_file')->defaultValue('/var/log/searchd/searchd.pid')->end()
                 ->scalarNode('workers')->defaultValue('threads')->end()
-                ->scalarNode('compat_sphinxql_magics')->defaultValue(0)->end()
                 ->scalarNode('thread_stack')->defaultValue('2048K')->end()
                 ->scalarNode('mysql_host')->defaultValue('127.0.0.1')->end()
                 ->scalarNode('mysql_port')->defaultValue(9306)->end()
