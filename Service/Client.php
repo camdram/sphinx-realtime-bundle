@@ -52,7 +52,10 @@ class Client
     {
         if (!$this->connection) {
             $this->connection = new Connection();
-            $this->connection->setConnectionParams($this->mysql_host, $this->mysql_port);
+            $this->connection->setParams(array(
+                'host' => $this->mysql_host,
+                'port' => $this->mysql_port
+            ));
         }
         return $this->connection;
     }
