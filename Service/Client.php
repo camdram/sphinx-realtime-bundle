@@ -48,7 +48,7 @@ class Client
         return $this->config;
     }
 
-    private function getConnection()
+    public function getConnection()
     {
         if (!$this->connection) {
             $this->connection = new Connection();
@@ -62,8 +62,8 @@ class Client
 
     public function query(SphinxQL $query)
     {
-        SphinxQL::forge($this->getConnection());
-        return $query->execute();
+        new SphinxQL($this->getConnection(), true);
+        $result = $query->execute();
         if ($result === false) {
             throw new \RuntimeException($this->connection->error);
         }
@@ -72,7 +72,7 @@ class Client
 
     public function insert($index, array $document)
     {
-        $sq = SphinxQL::forge($this->getConnection())->insert()->into('`'.$index.'`');
+        $sq = SphinxQL::create($this->getConnection())->insert()->into('`'.$index.'`');
         foreach ($document as &$value) {
             if (is_null($value)) $value = '';
         }
@@ -82,7 +82,7 @@ class Client
 
     public function insertMany($index, array $keys, array $documents)
     {
-        $sq = SphinxQL::forge($this->getConnection())->insert()->into('`'.$index.'`');
+        $sq = SphinxQL::create($this->getConnection())->insert()->into('`'.$index.'`');
         $sq->columns($keys);
         foreach ($documents as $document) {
             foreach ($document as &$value) {
@@ -95,7 +95,7 @@ class Client
 
     public function deleteById($index, $id)
     {
-        return SphinxQL::forge($this->getConnection())->delete()
+        return SphinxQL::create($this->getConnection())->delete()
             ->from('`'.$index.'`')
             ->where('id', $id)
             ->execute();
