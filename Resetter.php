@@ -2,6 +2,7 @@
 
 namespace Acts\SphinxRealTimeBundle;
 use Acts\SphinxRealTimeBundle\Manager\IndexManager;
+use Foolz\SphinxQL\DatabaseException;
 
 /**
  * Truncates indexes
@@ -26,7 +27,12 @@ class Resetter
     public function resetAllIndexes()
     {
         foreach ($this->indexManager->getIndexes() as $index) {
-            $index->truncate();
+            try {
+                $index->truncate();
+            }
+            catch (DatabaseException $ex)
+            {
+            }
         }
     }
 
@@ -38,7 +44,12 @@ class Resetter
      */
     public function resetIndex($indexName)
     {
-        $this->indexManager->getById($indexName)->truncate();
+        try {
+            $this->indexManager->getById($indexName)->truncate();
+        }
+        catch (DatabaseException $ex)
+        {
+        }
     }
 
 }
