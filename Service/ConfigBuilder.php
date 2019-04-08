@@ -30,7 +30,6 @@ class ConfigBuilder
             switch ($type) {
                 case 'float': $sphinx_type = 'float'; break;
                 case 'int': $sphinx_type = 'uint'; break;
-                case 'datetime': $sphinx_type = 'timestamp'; break;
                 default: $sphinx_type = 'string'; break;
             }
             $output .= "\trt_attr_$sphinx_type = $name\r\n";
